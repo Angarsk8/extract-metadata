@@ -3,6 +3,6 @@
       "description": "Metadata and images crawler for Meteor. Just feed it with an url and it will return the name, description and images inside that url.",
       "homepage": "https://github.com/bitomule/simple-metacrawler",
       "author": "David Collado <bitomule@gmail.com> (http://bitomule.com)",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "git": "https://github.com/bitomule/simple-metacrawler.git"
 }
