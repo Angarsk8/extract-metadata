@@ -1,5 +1,5 @@
 Meteor.methods({
-		'findUrls': function getGists(url) {
+		'simplecrawler_findMetadata': function getGists(url) {
 			this.unblock();
 			var cheerio = Npm.require('cheerio');
 			var urlResponse;
