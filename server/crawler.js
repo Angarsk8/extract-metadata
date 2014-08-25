@@ -73,6 +73,6 @@ Meteor.methods({
 			});
 				
 
-			return {name:pageName,description:pageDescription,images:findedImages};
+			return {name:pageName,description:pageDescription,images:findedImages,url:url};
 		}
 	});
