@@ -1,6 +1,6 @@
 Package.describe({
   summary: 'Simple server method that finds images, page name and description from an url',
-  version: '0.1.1'
+  version: '0.1.2'
 });
 
 Package.on_use(function (api) {
