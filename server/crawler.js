@@ -2,22 +2,45 @@ Meteor.methods({
 		'simplecrawler_findMetadata': function findMetada(url) {
 			this.unblock();
 			var cheerio = Npm.require('cheerio');
-			var urlResponse;
-			try{
-				urlResponse = Meteor.http.get(url,{rejectUnauthorized: false});
-				if(urlResponse.statusCode !== 200){
-					return {images:new Array()};
-				}
-			}
-			catch(err) {
-				return {error:err};
+			var iconv = Npm.require('iconv');
+			var request = Npm.require('request');
+			
+			var urlResponse = Async.runSync(function(done) {
+			  request(url, {rejectUnauthorized: false,timeout: 2000,encoding:null,headers: {'User-Agent': 'Safari 6.0'}}, function(error, resp, body) {
+				    if (error) {
+				        done(error,null);
+				    }
+				    else
+				    {
+				    	var tempBody = body.toString('utf-8');
+				    	$ = cheerio.load(tempBody);
+				    	
+				    	var charsetField = $("meta[http-equiv=Content-Type]");
+						if(charsetField.length > 0 && charsetField[0].attribs && charsetField[0].attribs.content){
+							if(charsetField[0].attribs.content.indexOf("iso-8859-15") >= 0){
+								//iso-8859-15 encoding
+								var ic = new iconv.Iconv('iso-8859-15', 'utf-8');
+						        var buf = ic.convert(body);
+						        var buffer = buf.toString('utf-8');
+						        done(null,buffer);
+							}
+						}
+				    	
+				    	done(null,tempBody);
+				        
+				    }
+				});
+			});
+			
+			if(urlResponse.error){
+				return {error:urlResponse.error};
 			}
 
             var pageName = '';
             var pageDescription = '';
 			
 			var findedImages = new Array();
-			$ = cheerio.load(urlResponse.content);
+			$ = cheerio.load(urlResponse.result);
 			
 			var meta = $('meta');
 			var keys = Object.keys(meta);
@@ -31,11 +54,13 @@ Meteor.methods({
                 {
                     pageName = meta[key].attribs.content;
                 }
+                
          
                 if (  meta[key].attribs && meta[key].attribs.property && meta[key].attribs.property === 'og:description')
                 {
                     pageDescription = meta[key].attribs.content;
                 }
+                
 				if (  meta[key].attribs && meta[key].attribs.property && meta[key].attribs.property === 'og:image') {
 					var src = meta[key].attribs.content;
 					var fullUrl = '';
@@ -47,7 +72,21 @@ Meteor.methods({
 					}	
 					findedImages.push(fullUrl);
 				}
+				
 			});
+			
+			if(pageName === ''){
+				pageName = $('title').text();
+			}
+
+			if(pageDescription === ''){
+				var metaDescription = $("meta[name=description]");
+				if(metaDescription.length > 0 && metaDescription[0].attribs && metaDescription[0].attribs.content){
+					pageDescription = metaDescription[0].attribs.content;
+				}
+			}
+			
+
 			
 			$('img').each(function(i, elem) {
 				var src = $(elem).attr('src');
@@ -76,3 +115,5 @@ Meteor.methods({
 			return {name:pageName,description:pageDescription,images:findedImages,url:url};
 		}
 	});
+	
+	
