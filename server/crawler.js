@@ -6,7 +6,7 @@ Meteor.methods({
 			var request = Npm.require('request');
 
 			var endsWithExtensionRegex = /\..{2,4}$/i;
-			if(endsWithExtensionRegex.text(url)){
+			if(endsWithExtensionRegex.test(url)){
 				var excluderRegex = /\.(es|com|net|edu|gov|uk|net|ca|de|jp|fr|au|us|ru|ch|it|nl|se|no|mil|jpg|png|jpeg|gif|php|asp)+$/i;
 				if(!excluderRegex.test(url)){
 					return {error:"Can't crawl files"};
@@ -14,7 +14,7 @@ Meteor.methods({
 			}
 			try{
 				var urlResponse = Async.runSync(function(done) {
-					request(url, {rejectUnauthorized: false,timeout: 2000,encoding:null,headers: {'User-Agent': 'Safari 6.0'}}, function(error, resp, body) {
+					request(url, {rejectUnauthorized: false,timeout: 5000,encoding:null,headers: {'User-Agent': 'Safari 6.0'}}, function(error, resp, body) {
 						if (error) {
 							done(error,null);
 						}
@@ -40,10 +40,12 @@ Meteor.methods({
 						});
 				});
 			}catch(err){
+				console.log(err);
 				return {error:err};
 			}
 
 			if(urlResponse.error){
+				console.log(urlResponse.error);
 				return {error:urlResponse.error};
 			}
 
