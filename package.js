@@ -1,6 +1,6 @@
 Package.describe({
   summary: 'Simple server method that finds images, page name and description from an url',
-  version: '0.2.3',
+  version: '0.2.4',
   git: 'https://github.com/bitomule/simple-metacrawler.git',
   name: "bitomule:simple-metacrawler"
 });
