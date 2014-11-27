@@ -5,9 +5,12 @@ Meteor.methods({
 			var iconv = Npm.require('iconv');
 			var request = Npm.require('request');
 
-			var excluderRegex = /\..{2,4}$/i;
-			if(excluderRegex.test(url)){
-				return {error:"Can't crawl files"};
+			var endsWithExtensionRegex = /\..{2,4}$/i;
+			if(endsWithExtensionRegex.text(url)){
+				var excluderRegex = /\.(es|com|net|edu|gov|uk|net|ca|de|jp|fr|au|us|ru|ch|it|nl|se|no|mil|jpg|png|jpeg|gif|php|asp)+$/i;
+				if(!excluderRegex.test(url)){
+					return {error:"Can't crawl files"};
+				}
 			}
 			try{
 				var urlResponse = Async.runSync(function(done) {
