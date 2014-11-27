@@ -4,47 +4,55 @@ Meteor.methods({
 			var cheerio = Npm.require('cheerio');
 			var iconv = Npm.require('iconv');
 			var request = Npm.require('request');
-			
-			var urlResponse = Async.runSync(function(done) {
-			  request(url, {rejectUnauthorized: false,timeout: 2000,encoding:null,headers: {'User-Agent': 'Safari 6.0'}}, function(error, resp, body) {
-				    if (error) {
-				        done(error,null);
-				    }
-				    else
-				    {
-				    	var tempBody = body.toString('utf-8');
-				    	$ = cheerio.load(tempBody);
-				    	
-				    	var charsetField = $("meta[http-equiv=Content-Type]");
-						if(charsetField.length > 0 && charsetField[0].attribs && charsetField[0].attribs.content){
-							if(charsetField[0].attribs.content.indexOf("iso-8859-15") >= 0){
-								//iso-8859-15 encoding
-								var ic = new iconv.Iconv('iso-8859-15', 'utf-8');
-						        var buf = ic.convert(body);
-						        var buffer = buf.toString('utf-8');
-						        done(null,buffer);
-							}
+
+			var excluderRegex = /\..{2,4}$/i;
+			if(excluderRegex.test(url)){
+				return {error:"Can't crawl files"};
+			}
+			try{
+				var urlResponse = Async.runSync(function(done) {
+					request(url, {rejectUnauthorized: false,timeout: 2000,encoding:null,headers: {'User-Agent': 'Safari 6.0'}}, function(error, resp, body) {
+						if (error) {
+							done(error,null);
 						}
-				    	
-				    	done(null,tempBody);
-				        
-				    }
+						else
+							{
+								var tempBody = body.toString('utf-8');
+								$ = cheerio.load(tempBody);
+
+								var charsetField = $("meta[http-equiv=Content-Type]");
+								if(charsetField.length > 0 && charsetField[0].attribs && charsetField[0].attribs.content){
+									if(charsetField[0].attribs.content.indexOf("iso-8859-15") >= 0){
+										//iso-8859-15 encoding
+										var ic = new iconv.Iconv('iso-8859-15', 'utf-8');
+										var buf = ic.convert(body);
+										var buffer = buf.toString('utf-8');
+										done(null,buffer);
+									}
+								}
+
+								done(null,tempBody);
+
+							}
+						});
 				});
-			});
-			
+			}catch(err){
+				return {error:err};
+			}
+
 			if(urlResponse.error){
 				return {error:urlResponse.error};
 			}
 
             var pageName = '';
             var pageDescription = '';
-			
+
 			var findedImages = new Array();
 			$ = cheerio.load(urlResponse.result);
-			
+
 			var meta = $('meta');
 			var keys = Object.keys(meta);
-		
+
 			keys.forEach(function(key){
                 if (  meta[key].attribs && meta[key].attribs.property && meta[key].attribs.property === 'og:site_name')
                 {
@@ -54,13 +62,13 @@ Meteor.methods({
                 {
                     pageName = meta[key].attribs.content;
                 }
-                
-         
+
+
                 if (  meta[key].attribs && meta[key].attribs.property && meta[key].attribs.property === 'og:description')
                 {
                     pageDescription = meta[key].attribs.content;
                 }
-                
+
 				if (  meta[key].attribs && meta[key].attribs.property && meta[key].attribs.property === 'og:image') {
 					var src = meta[key].attribs.content;
 					var fullUrl = '';
@@ -69,12 +77,12 @@ Meteor.methods({
 					}
 					else{
 						fullUrl = url + src;
-					}	
+					}
 					findedImages.push(fullUrl);
 				}
-				
+
 			});
-			
+
 			if(pageName === ''){
 				pageName = $('title').text();
 			}
@@ -85,9 +93,9 @@ Meteor.methods({
 					pageDescription = metaDescription[0].attribs.content;
 				}
 			}
-			
 
-			
+
+
 			$('img').each(function(i, elem) {
 				var src = $(elem).attr('src');
 				var fullUrl = '';
@@ -96,7 +104,7 @@ Meteor.methods({
 				}
 				else{
 					fullUrl = url + $(elem).attr('src');
-				}					
+				}
 				try{
 					var imageGet = Meteor.http.get(fullUrl);
 					if(imageGet.statusCode === 200 && parseInt(imageGet.headers['content-length']) > 1000){
@@ -110,10 +118,8 @@ Meteor.methods({
 				catch(err) {
 				}
 			});
-				
+
 
 			return {name:pageName,description:pageDescription,images:findedImages,url:url};
 		}
 	});
-	
-	
