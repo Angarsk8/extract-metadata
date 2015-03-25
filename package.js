@@ -1,14 +1,14 @@
 Package.describe({
   summary: 'Simple server method that finds images, page name and description from an url',
-  version: '0.2.5',
+  version: '0.2.6',
   git: 'https://github.com/bitomule/simple-metacrawler.git',
   name: "bitomule:simple-metacrawler"
 });
 
 Npm.depends({
-    'cheerio': '0.17.0',
-    'request': '2.45.0',
-    'iconv': '2.1.4'
+    'cheerio': '0.19.0',
+    'request': '2.54.0',
+    'iconv': '2.1.6'
 });
 
 Package.on_use(function (api) {
