@@ -1,5 +1,6 @@
 Meteor.methods({
 		'simplecrawler_findMetadata': function findMetada(url) {
+			check(url,String);
 			this.unblock();
 			var cheerio = Npm.require('cheerio');
 			var iconv = Npm.require('iconv');
