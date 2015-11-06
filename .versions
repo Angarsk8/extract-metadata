@@ -1,3 +1,4 @@
-bitomule:simple-metacrawler@0.2.6
-meteor@1.1.6
-underscore@1.0.3
+bitomule:simple-metacrawler@0.2.7
+meteor@1.1.10
+meteorhacks:async@1.0.0
+underscore@1.0.4

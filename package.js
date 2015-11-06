@@ -13,6 +13,6 @@ Npm.depends({
 
 Package.on_use(function (api) {
     api.versionsFrom("1.0.1");
-    api.use(["meteorhacks:async"]);
+    api.use(["meteorhacks:async@1.0.0"]);
 	api.add_files('server/crawler.js', ['server']);
 });
