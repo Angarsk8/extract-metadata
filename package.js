@@ -1,6 +1,6 @@
 Package.describe({
   summary: 'Simple server method that finds images, page name and description from an url',
-  version: '0.2.6',
+  version: '0.2.7',
   git: 'https://github.com/bitomule/simple-metacrawler.git',
   name: "bitomule:simple-metacrawler"
 });
@@ -12,10 +12,7 @@ Npm.depends({
 });
 
 Package.on_use(function (api) {
-
-	if(api.versionsFrom) {
-		api.versionsFrom('METEOR@0.9.0');
-	}
+    api.versionsFrom("1.0.1");
+    api.use(["async"]);
 	api.add_files('server/crawler.js', ['server']);
-
 });
