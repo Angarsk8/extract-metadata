@@ -1,13 +1,13 @@
-# simple-metacrawler 
+# simple-metacrawler
 
 Metadata and images crawler for Meteor. Just feed it with an url and it will return the name, description and images inside that url.
 
 ##  Installation
 
-Simple metacrawler can be installed with [Meteorite](https://github.com/oortcloud/meteorite/). From inside a Meteorite-managed app:
+Just run:
 
 ``` sh
-$ mrt add simple-metacrawler
+$ meteor add simple-metacrawler
 ```
 
 ##  How to
@@ -15,9 +15,9 @@ $ mrt add simple-metacrawler
 Simple metecrawler just adds a server side method to your meteor app. This method is called 'simplecrawler_findMetadata'. To call it client side use:
 
 ``` javascript
-Meteor.call('simplecrawler_findMetadata', url, function (error, result) { 
+Meteor.call('simplecrawler_findMetadata', url, function (error, result) {
 	//Error is empty if all goes well
-	//Result will containt and object like: 
+	//Result will containt and object like:
 	//{name:'Page name',description:'Here's the metadata description',images:['img url 1','img url 2']}
 });
 ```
