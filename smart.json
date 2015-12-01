@@ -1,8 +1,8 @@
 {
-      "name": "simple-metacrawler",
-      "description": "Metadata and images crawler for Meteor. Just feed it with an url and it will return the name, description and images inside that url.",
-      "homepage": "https://github.com/bitomule/simple-metacrawler",
-      "author": "David Collado <bitomule@gmail.com> (http://bitomule.com)",
-      "version": "0.2.6",
-      "git": "https://github.com/bitomule/simple-metacrawler.git"
+    "name": "extract-metadata",
+    "description": "Metadata scraper for Meteor (Fork of simple-metacrawler). Just feed it with an url and it will return the name, description and image inside that url.",
+    "homepage": "https://github.com/Angarsk8/extract-metadata",
+    "author": "Andrés García <andresa.garciah621@gmail.com>",
+    "version": "0.0.1",
+    "git": "https://github.com/Angarsk8/extract-metadata.git"
 }

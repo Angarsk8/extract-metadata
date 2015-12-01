@@ -1,8 +1,8 @@
 Package.describe({
-  summary: 'Simple server method that finds images, page name and description from an url',
-  version: '0.2.7',
-  git: 'https://github.com/bitomule/simple-metacrawler.git',
-  name: "bitomule:simple-metacrawler"
+    summary: 'Fork of the simple-metacrawler meteor package',
+    version: '0.0.1',
+    git: 'https://github.com/Angarsk8/extract-metadata.git',
+    name: "agarcia038:extract-metadata"
 });
 
 Npm.depends({
@@ -11,8 +11,8 @@ Npm.depends({
     'iconv': '2.1.6'
 });
 
-Package.on_use(function (api) {
+Package.on_use(function(api) {
     api.versionsFrom("1.0.1");
     api.use(["meteorhacks:async@1.0.0"]);
-	api.add_files('server/crawler.js', ['server']);
+    api.add_files('server/crawler.js', ['server']);
 });
